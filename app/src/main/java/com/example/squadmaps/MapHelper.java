@@ -61,9 +61,6 @@ public class MapHelper implements UserLocationObjectListener {
     private PlacemarkMapObject moveMark = null;
     private PlacemarkMapObject userloc = null;
 
-//    private final int USER_MARKER = R.drawable.nav_home;
-//    private final int USER_MARKER = R.drawable.user_ic;
-    private final int TEST = 123;
     private final int USER_MARKER = android.R.drawable.btn_star_big_on;
     private final int MEMBER_MARKER = android.R.drawable.btn_star_big_off;
 
