@@ -12,17 +12,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements Itest {
     private DatabaseHelper databaseHelper;
-    private Button btnLog;
-    private EditText edtUsername;
-    private EditText edtPassword;
-    private EditText edtLogin;
-    private String login = null;
-    private String password = null;
-    private String username = null;
+    private MyApplication myApplication;
+    private boolean flg = true;
 
-//    LiveData<Boolean> flg;
+    private final Observer<Boolean> observer = new Observer<>() {
+        @Override
+        public void onChanged(Boolean aBoolean) {
+            if (Boolean.TRUE.equals(SData.isReg.getValue())) {
+                if (!databaseHelper.checklogin(SData.login)) databaseHelper.insertData(SData.login, SData.password, SData.userName);
+                Toast.makeText(MyApplication.getContext(), "Вы успешно вошли в систему", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,50 +34,18 @@ public class LoginActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
-        MyApplication myApplication = (MyApplication) getApplicationContext();
+        myApplication = (MyApplication) getApplicationContext();
         databaseHelper = new DatabaseHelper(LoginActivity.this);
 
-        btnLog = findViewById(R.id.btnLogin);
-        edtLogin = findViewById(R.id.edtLogin);
-        edtPassword = findViewById(R.id.edtPassword);
-        edtUsername = findViewById(R.id.edtUsername);
+        SData.isReg.observe(this, observer);
+        if (Boolean.FALSE.equals(SData.isReg.getValue())) getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoginFragment(myApplication)).commit();
+        else startActivity(new Intent(LoginActivity.this, MainActivity.class));
+    }
 
-        if (myApplication.getCli().isRegistered()) startActivity(new Intent(LoginActivity.this, MainActivity.class));
+    public void msgFromFragment() {
+        if (flg) getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoginFragment(myApplication)).commit();
+        else getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new RegistrationFragment(myApplication)).commit();
 
-        btnLog.setOnClickListener(v -> {
-            login = edtLogin.getText().toString().trim();
-            password = edtPassword.getText().toString().trim();
-            username = edtUsername.getText().toString().trim();
-
-            Log.i("onCreate", "onCreate: 123");
-            if (login.isEmpty() || username.isEmpty() || password.isEmpty()) {
-                Toast.makeText(LoginActivity.this, "All fields must be not empty", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            myApplication.getCli().PKTReg(login, password, username);
-
-
-//            if (!databaseHelper.checklogin(login)) databaseHelper.insertData(login, password, username);
-//            else {
-//                boolean isExist = databaseHelper.check(login, password, username);
-//
-//                if (isExist) {
-//                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//                    startActivity(intent);
-//                } else {
-//                    edtPassword.setText(null);
-//                    Toast.makeText(LoginActivity.this, "Login failed. Some fields wrong", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-        });
-
-        Client.isReg.observe(this, aBoolean -> {
-            if (Client.isReg.getValue()) {
-                if (login != null && !databaseHelper.checklogin(login)) databaseHelper.insertData(login, password, username);
-                Toast.makeText(MyApplication.getContext(), "Вы успешно вошли в систему", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            }
-        });
+        flg = !flg;
     }
 }

@@ -111,7 +111,7 @@ public class GroupFragment extends Fragment {
         listAdapter = new GroupListAdapter(view.getContext(), deptList);
         simpleExpandableListView.setAdapter(listAdapter);
 
-        Client.groupArray.observe(getViewLifecycleOwner(), obs);
+        SData.groupArray.observe(getViewLifecycleOwner(), obs);
 
         btnJoinGroup = view.findViewById(R.id.grJoin);
         btnJoinGroup.setOnClickListener(v -> {

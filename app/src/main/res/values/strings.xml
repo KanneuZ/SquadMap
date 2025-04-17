@@ -11,6 +11,7 @@
     <string name="username_hint">Username</string>
     <string name="password_hint">Password</string>
     <string name="login_btn">Continue</string>
+    <string name="goto_btn">Go to registration</string>
     <string name="top_info"><b>Create an account</b>\nEnter your login, username and passoword to sign up for this app</string>
     <string name="bottom_info">By clicking continue, you agree to our <b>Terms of Service</b> and <b>Privacy Policy</b></string>
 

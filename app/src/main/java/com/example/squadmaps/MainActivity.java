@@ -44,10 +44,6 @@ public class MainActivity extends AppCompatActivity {
         mapHelper = new MapHelper(MAPKIT_API_KEY, this, myApplication);
         if (!mapHelper.isInit) mapHelper.initializeAPI();
 
-//         map API
-//        MapKitFactory.setApiKey(MAPKIT_API_KEY);
-//        MapKitFactory.initialize(this);
-
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -72,17 +68,10 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        DatabaseHelper db = new DatabaseHelper(MyApplication.getContext());
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         tv = headerView.findViewById(R.id.username);
         coord = headerView.findViewById(R.id.user_coord);
-        tv.setText(db.getUsername());
-    }
-
-    private void func() {
-        setContentView(R.layout.nav_header);
-
+        tv.setText(SData.userName);
     }
 }

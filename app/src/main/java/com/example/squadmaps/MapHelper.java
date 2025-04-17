@@ -81,11 +81,6 @@ public class MapHelper implements UserLocationObjectListener {
             if (userloc == null) userloc = userlocCol.addPlacemark(location.getPosition(), ImageProvider.fromResource(context, USER_MARKER));
             else userloc.setGeometry(location.getPosition());
 
-//            ImageProvider img = ImageProvider.fromResource(context, R.drawable.user_ic);
-//            userloc.setIcon(img);
-//            userloc.setIconStyle(new IconStyle());
-//            userloc.setDirection();
-
             userloc.setOpacity(1f);
             if (moveMark != null) placeLine(moveLineCol, userloc.getGeometry(), moveMark.getGeometry());
             myApplication.getCli().PKTUserCord(userloc.getGeometry());
@@ -182,8 +177,8 @@ public class MapHelper implements UserLocationObjectListener {
         initMap(view, id);
         initCols();
 
-        Client.userPoint.observe(onw, memberMarkersObs);
-        Client.marker.observe(onw, markersObserver);
+        SData.userPoint.observe(onw, memberMarkersObs);
+        SData.marker.observe(onw, markersObserver);
 
         locationManager = mapKit.createLocationManager();
     }

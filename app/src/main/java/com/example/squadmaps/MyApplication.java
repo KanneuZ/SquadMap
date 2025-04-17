@@ -1,6 +1,7 @@
 package com.example.squadmaps;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 public class MyApplication extends android.app.Application {
@@ -19,7 +20,7 @@ public class MyApplication extends android.app.Application {
     public void onCreate() {
         instance = this;
         super.onCreate();
-        conetc();
+        connect();
     }
 
     public static Context getContext() {
@@ -30,10 +31,10 @@ public class MyApplication extends android.app.Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
-        disconetc();
+        disconnected();
     }
 
-    private void conetc() {
+    private void connect() {
         cli = new Client(HOST, PORT);
         try {
             cli.openConnection();
@@ -43,7 +44,7 @@ public class MyApplication extends android.app.Application {
         }
     }
 
-    private void disconetc() {
+    private void disconnected() {
         cli.closeConnection();
     }
 }

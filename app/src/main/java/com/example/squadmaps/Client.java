@@ -39,19 +39,11 @@ public class Client {
 
     ArrayList<GroupInfo> grArray = new ArrayList<>();
     ArrayList<MarkersInfo> mkr = new ArrayList<>();
-    public static MutableLiveData<Boolean> isReg = new MutableLiveData<>();
-    public static MutableLiveData<ArrayList<GroupInfo>> groupArray = new MutableLiveData<>();
-    public static MutableLiveData<UserInfo> userPoint = new MutableLiveData<>();
-    public static MutableLiveData<ArrayList<MarkersInfo>> marker = new MutableLiveData<>();
-
     public Client() {}
 
     public Client (final String host, final int port) {
         this.mHost = host;
         this.mPort = port;
-        inDataSize = 0;
-        isReg.postValue(false);
-        groupArray.postValue(null);
     }
 
     public void openConnection() throws Exception  {
@@ -138,7 +130,7 @@ public class Client {
         switch (ansType) {
             case 0:
                 isRegistered = true;
-                isReg.postValue(true);
+                SData.isReg.postValue(true);
                 return true;
             case 1:
             case 2:
@@ -158,7 +150,8 @@ public class Client {
         switch (ansType) {
             case 0:
                 isRegistered = true;
-                isReg.postValue(true);
+                SData.userName = ansStr;
+                SData.isReg.postValue(true);
                 return true;
             case 1:
             case 2:
@@ -224,7 +217,7 @@ public class Client {
 
         group.setProductList(childs);
         grArray.add(group);
-        groupArray.postValue(grArray);
+        SData.groupArray.postValue(grArray);
         return true;
     }
 
@@ -233,7 +226,6 @@ public class Client {
         a = 1;
 
         String ansStr = readString(body, a);
-        Log.d(LOG_TAG, "PKTLoginAns: "+ansType+" "+ansStr);
         switch (ansType) {
             case 0:
                 Log.d(LOG_TAG, "Вы вошли в группу!");
@@ -258,7 +250,7 @@ public class Client {
         longitude = bytesToFloat(body, offset);
 
 //        Log.d(LOG_TAG, "PKTUserCordAns: id = "+id+" cord "+longitude+" "+latitude);
-        userPoint.postValue(new UserInfo(id, latitude, longitude));
+        SData.userPoint.postValue(new UserInfo(id, latitude, longitude));
         return true;
     }
 
@@ -287,18 +279,25 @@ public class Client {
             Log.i(LOG_TAG, "PKTMarkerAddAns: "+type+" "+color+" "+description+" "+latitude+" "+longitude);
         }
 
-        marker.postValue(mkr);
+        SData.marker.postValue(mkr);
         return true;
     }
 
     /* ==================== PKT qwr ==================== */
 
     public void PKTReg(String login, String password, String name) {
+        SData.login = login;
+        SData.userName = name;
+        SData.password = password;
+
         byte[] body = (login+"\0"+password+"\0"+name).getBytes(StandardCharsets.UTF_8);
         sendPacket(PKT_USER_REG, body, body.length);
     }
 
     public void PKTLogin(String login, String password) {
+        SData.login = login;
+        SData.password = password;
+
         byte[] body = (login+"\0"+password).getBytes(StandardCharsets.UTF_8);
         sendPacket(PKT_USER_LOGIN, body, body.length);
     }
@@ -423,7 +422,7 @@ public class Client {
             byte[] el;
 
             DatabaseHelper databaseHelper = new DatabaseHelper(MyApplication.getContext());
-//            Log.d(LOG_TAG, "run: "+databaseHelper.getLogin()+" "+databaseHelper.getPassword());
+            Log.d(LOG_TAG, "run: "+databaseHelper.getLogin()+" "+databaseHelper.getPassword());
             if (databaseHelper.getLogin() != null && databaseHelper.getPassword() != null) PKTLogin(databaseHelper.getLogin(), databaseHelper.getPassword());
 
             while (true) {
@@ -451,7 +450,6 @@ public class Client {
         @Override
         public void run() {
             int r, type, size;
-
 
             do {
                 try {
