@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:attr/textColorSecondaryInverse">
+<!--    android:background="?android:attr/textColorSecondaryInverse"-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,7 +13,8 @@
         android:background="@drawable/custom_group_popup"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_margin="10dp">
+        android:layout_margin="10dp"
+        android:elevation="20dp">
 
         <TextView
             android:id="@+id/popupTitle"
@@ -21,7 +23,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:gravity="center"
-            android:text="Add new group"/>
+            android:text="@string/popup_title"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,7 +36,7 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                android:hint="Group name"
+                android:hint="@string/name_hint"
                 android:paddingStart="5dp"
                 android:background="@drawable/custom_input"/>
 
@@ -48,7 +50,7 @@
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:paddingStart="5dp"
-                android:hint="Password"
+                android:hint="@string/password_hint"
                 android:background="@drawable/custom_input"/>
 
         </LinearLayout>
@@ -56,7 +58,7 @@
         <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5" />
+            android:layout_weight="0.25" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -70,19 +72,22 @@
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
-                android:text="Cancel" />
+                android:textColor="@color/white"
+                android:background="@drawable/custom_button"
+                android:text="@string/btn_cansel" />
 
             <Space
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"/>
+                android:layout_width="40dp"
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/btnAccept"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
-                android:text="Add group" />
+                android:textColor="@color/white"
+                android:background="@drawable/custom_button"
+                android:text="@string/btn_accept" />
 
         </LinearLayout>
     </LinearLayout>

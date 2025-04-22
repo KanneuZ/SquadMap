@@ -11,8 +11,17 @@ public class MarkersInfo {
 
 	public MarkersInfo(int id, int type, Point point) {
 		this.id = id;
-		this.type = type;
 		this.point = point;
+
+		switch (type) {
+			case 0:
+				this.type = SData.MOVE_MARKER;
+				return;
+			case 1:
+				this.type = SData.HOUSE_MARKER;
+				return;
+			default: this.type = type;
+		}
 	}
 
 	public int getId() {

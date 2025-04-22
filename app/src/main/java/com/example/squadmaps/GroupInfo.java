@@ -5,12 +5,19 @@ import com.yandex.mapkit.map.MapObjectCollection;
 import java.util.ArrayList;
 
 public class GroupInfo {
-
-    private Integer grId;
+    private Integer id;
+    private Integer leadId;
     private String name;
-    MapObjectCollection col;
+    private Boolean isPrim = false;
+
     private ArrayList<UserInfo> list = new ArrayList<>();
     private ArrayList<MarkersInfo> markers = new ArrayList<>();
+
+    public GroupInfo() {}
+    public GroupInfo(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     public String getName() {
         return name;
@@ -28,11 +35,27 @@ public class GroupInfo {
         this.list = productList;
     }
 
-    public Integer getGrId() {
-        return grId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setGrId(Integer grId) {
-        this.grId = grId;
+    public void setId(Integer id) {
+        this.id = id;
     }
+
+	public Integer getLeadId() {
+		return leadId;
+	}
+
+	public void setLeadId(Integer leadId) {
+		this.leadId = leadId;
+	}
+
+	public Boolean getPrim() {
+		return isPrim;
+	}
+
+	public void setPrim(Boolean prim) {
+		isPrim = prim;
+	}
 }

@@ -1,31 +1,15 @@
 package com.example.squadmaps;
 
-import android.app.Fragment;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
-import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.GravityCompat;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
-import com.yandex.mapkit.MapKit;
-import com.yandex.mapkit.MapKitFactory;
-import com.yandex.mapkit.mapview.MapView;
-import com.yandex.mapkit.user_location.UserLocationLayer;
-import com.yandex.mapkit.user_location.UserLocationObjectListener;
 
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
@@ -42,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         myApplication = (MyApplication) getApplicationContext();
         mapHelper = new MapHelper(MAPKIT_API_KEY, this, myApplication);
-        if (!mapHelper.isInit) mapHelper.initializeAPI();
+        if (!mapHelper.isInitAPI) mapHelper.initializeAPI();
 
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

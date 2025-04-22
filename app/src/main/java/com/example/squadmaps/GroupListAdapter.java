@@ -1,13 +1,17 @@
 package com.example.squadmaps;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class GroupListAdapter extends BaseExpandableListAdapter {
 
@@ -32,14 +36,20 @@ public class GroupListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View view, ViewGroup parent) {
-        UserInfo detailInfo = (UserInfo) getChild(groupPosition, childPosition);
+        UserInfo member = (UserInfo) getChild(groupPosition, childPosition);
+
         if (view == null) {
             LayoutInflater infalInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = infalInflater.inflate(R.layout.child_items, null);
         }
 
         TextView childItem = view.findViewById(R.id.childItem);
-        childItem.setText(detailInfo.getName().trim());
+        childItem.setText(member.getName().trim());
+
+
+        ImageView img = view.findViewById(R.id.mark_icon);
+        if (member.isLead()) img.setImageResource(SData.USER_MARKER);
+        else img.setImageResource(SData.MEMBER_MARKER);
 
         return view;
     }
@@ -48,7 +58,6 @@ public class GroupListAdapter extends BaseExpandableListAdapter {
     public int getChildrenCount(int groupPosition) {
         ArrayList<UserInfo> productList = deptList.get(groupPosition).getProductList();
         return productList.size();
-
     }
 
     @Override
@@ -77,6 +86,10 @@ public class GroupListAdapter extends BaseExpandableListAdapter {
         TextView heading = view.findViewById(R.id.heading);
         heading.setText(headerInfo.getName().trim());
 
+        ImageView img = view.findViewById(R.id.imgBtnHide);
+        if (Objects.equals(SData.primGrId, headerInfo.getId())) img.setVisibility(View.VISIBLE);
+        else img.setVisibility(View.INVISIBLE);
+
         return view;
     }
 
@@ -88,5 +101,19 @@ public class GroupListAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
+    }
+
+    public void removeGr(int grPos) {
+        GroupInfo group = (GroupInfo) getGroup(grPos);
+        deptList.remove(group);
+
+        notifyDataSetChanged();
+    }
+
+    public void removeChild(int grPos, int childPos) {
+        UserInfo user = (UserInfo) getChild(grPos, childPos);
+        deptList.get(grPos).getProductList().remove(user);
+
+        notifyDataSetChanged();
     }
 }

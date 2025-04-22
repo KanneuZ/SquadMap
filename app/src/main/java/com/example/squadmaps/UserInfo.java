@@ -5,16 +5,23 @@ public class UserInfo {
     private String name = "";
     private String status = "";
     private boolean isOnline = false;
-    private float longitude;
-    private float latitude;
-    private int pointType;
-    private int id;
+	private boolean isLead = false;
+	private boolean isToDell = false;
+	private float longitude;
+	private float latitude;
+	private int pointType;
+	private int id;
 
     public UserInfo(int id, float latitude, float longitude) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
     }
+
+	public UserInfo(int id, String name) {
+		this.id = id;
+		this.name = name;
+	}
 
     public UserInfo(int i, String n, boolean flg, String st, int pt) {
         pointType = pt;
@@ -80,5 +87,21 @@ public class UserInfo {
 
 	public void setLongitude(float longitude) {
 		this.longitude = longitude;
+	}
+
+	public boolean isLead() {
+		return isLead;
+	}
+
+	public void setLead(boolean lead) {
+		isLead = lead;
+	}
+
+	public boolean isToDell() {
+		return isToDell;
+	}
+
+	public void setToDell(boolean toDell) {
+		isToDell = toDell;
 	}
 }

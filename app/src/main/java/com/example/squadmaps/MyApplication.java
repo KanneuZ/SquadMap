@@ -6,9 +6,11 @@ import android.util.Log;
 
 public class MyApplication extends android.app.Application {
     private final String LOG_TAG = "MyApplication";
+
     private final String LocalHOST = "192.168.1.29";
     private final String HOST = "squadmap.ydns.eu";
     private final int PORT = 4000;
+
     private Client cli  = null;
     private static MyApplication instance;
 

@@ -2,14 +2,13 @@ package com.example.squadmaps;
 
 import android.util.Log;
 
-import androidx.lifecycle.MutableLiveData;
-
 import com.yandex.mapkit.geometry.Point;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.concurrent.Semaphore;
 
 public class Client {
@@ -28,14 +27,18 @@ public class Client {
     private int a;
     private boolean isRegistered = false;
 
-    private final int PKT_POOL_TEST = 0;
-    private final int PKT_USER_REG = 1;
-    private final int PKT_USER_LOGIN = 2;
-    private final int PKT_USER_GROUPINFO = 3;
-    private final int PKT_GROUP_CREATE = 4;
-    private final int PKT_GROUP_JOIN = 5;
-    private final int PKT_USER_COORDS = 6;
-    private final int PKT_MARKER_CREATE = 8;
+    private final int PKT_POOL_TEST          = 0;
+    private final int PKT_USER_REG           = 1;
+    private final int PKT_USER_LOGIN         = 2;
+    private final int PKT_USER_GROUPINFO     = 3;
+    private final int PKT_GROUP_CREATE       = 4;
+    private final int PKT_GROUP_JOIN         = 5;
+    private final int PKT_USER_COORDS        = 6;
+    private final int PKT_MARKER_CREATE      = 8;
+    private final int PKT_GROUP_CHANGE_LEAD  = 10;
+    private final int PKT_USER_CHANGE_PRIMGR = 11;
+    private final int PKT_GROUP_EXIT         = 12;
+    private final int PKT_GROUP_KICK         = 13;
 
     ArrayList<GroupInfo> grArray = new ArrayList<>();
     ArrayList<MarkersInfo> mkr = new ArrayList<>();
@@ -99,14 +102,18 @@ public class Client {
         System.arraycopy(inQ, 3, body, 0, size);
 
         switch (type) {
-            case 0: return PKTTestAns(body);
-            case 1: return PKTRegAns(body);
-            case 2: return PKTLoginAns(body);
-            case 3: return PKTGroupInfoAns(body);
-            case 4: return PKTGroupCreateAns(body);
-            case 5: return PKTGroupJoinAns(body);
-            case 6: return PKTUserCordAns(body);
-            case 9: return PKTMarkerAddAns(body);
+            case 0:  return PKTTestAns(body);
+            case 1:  return PKTRegAns(body);
+            case 2:  return PKTLoginAns(body);
+            case 3:  return PKTGroupInfoAns(body);
+            case 4:  return PKTGroupCreateAns(body);
+            case 5:  return PKTGroupJoinAns(body);
+            case 6:  return PKTUserCordAns(body);
+            case 9:  return PKTMarkerAddAns(body);
+            case 10: return PTKChangeLeadAns(body);
+            case 11: return PKTChangePrimGroupAns(body);
+            case 12: return PKTExitGroupAns(body);
+            case 13: return PKTGroupKickAns(body);
         }
 
         return false;
@@ -142,19 +149,30 @@ public class Client {
     }
 
     public boolean PKTLoginAns(byte[] body) {
-        int ansType = body[0];
-        a = 1;
-
-        String ansStr = readString(body, a);
-
+        int ansType, offset;
+        String ansStr;
+        offset = 0;
+        ansType = body[offset];
+        offset++;
         switch (ansType) {
             case 0:
-                isRegistered = true;
+                SData.id = bytesToInt(body, offset);
+                offset += 4;
+                SData.primGrId = bytesToInt(body, offset);
+                offset += 4;
+                a = offset;
+                ansStr = readString(body, offset);
                 SData.userName = ansStr;
+                Log.d(LOG_TAG, "PKTLoginAns: "+ansStr);
+
+                isRegistered = true;
                 SData.isReg.postValue(true);
                 return true;
             case 1:
             case 2:
+                a = offset;
+				ansStr = readString(body, offset);
+                Log.d(LOG_TAG, "PKTLoginAns: "+ansStr);
                 isRegistered = false;
                 return true;
         }
@@ -187,15 +205,19 @@ public class Client {
         ArrayList<UserInfo> childs = new ArrayList<>();
 
         a = 0;
-        grId = (body[a]&0xFF) + ((body[a+1]&0xFF)<<8) + ((body[a+2]&0xFF)<<16) + ((body[a+3]&0xFF)<<32);
+        grId = bytesToInt(body, a);
+        mode = (body[a+4]&0xFF) + ((body[a+5]&0xFF)<<8);
+        if ((mode & (1 << 4)) != 0) {
+            group.setPrim(true);
+            SData.primGrId = grId;
+        }
 
         a += 7;
         grName = readString(body, a);
         Log.d(LOG_TAG, "PKTGroupInfoAns: "+grId+" "+grName);
 
         group.setName(grName);
-        group.setGrId(grId);
-
+        group.setId(grId);
 
         while (a < body.length-1) {
             memberId = bytesToInt(body, a);
@@ -207,15 +229,17 @@ public class Client {
             memberName = readString(body, a);
             Log.d(LOG_TAG, "PKTGroupInfoAns: "+memberId+" "+memberName);
 
-            UserInfo ci = new UserInfo();
+            UserInfo ci = new UserInfo(memberId, memberName);
+            ci.setToDell((mode & 1) != 0);
+            ci.setLead((mode & (1 << 2)) != 0);
 
-            if ((mode & (1 << 2)) != 0) memberName = "* "+memberName;
-
-            ci.setName(memberName);
-            childs.add(ci);
+            if (ci.isLead()) childs.add(0, ci);
+            else childs.add(ci);
         }
 
         group.setProductList(childs);
+        group.setLeadId(childs.get(0).getId());
+
         grArray.add(group);
         SData.groupArray.postValue(grArray);
         return true;
@@ -275,11 +299,89 @@ public class Client {
             longitude = bytesToFloat(body, offset);
             offset += 4;
 
-            mkr.add(new MarkersInfo(markerId, type, new Point(latitude, longitude)));
             Log.i(LOG_TAG, "PKTMarkerAddAns: "+type+" "+color+" "+description+" "+latitude+" "+longitude);
+
+            MarkersInfo markersInfo = new MarkersInfo(markerId, type, new Point(latitude, longitude));
+            SData.marks.add(markersInfo);
+            mkr.add(markersInfo);
         }
 
         SData.marker.postValue(mkr);
+        return true;
+    }
+
+    public boolean PTKChangeLeadAns(byte[] body) {
+        int ansType = body[0];
+        a = 1;
+
+        String ansStr = readString(body, 1);
+
+        switch (ansType) {
+            case 0:
+                return true;
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                Log.d(LOG_TAG, "PTKChangeLeadAns: "+ansStr);
+                return true;
+        }
+
+        return true;
+    }
+
+    public boolean PKTChangePrimGroupAns(byte[] body) {
+        String ansStr;
+        int ansType = body[0];
+
+        switch (ansType) {
+            case 0:
+                SData.primGrId = bytesToInt(body, 1);
+                SData.marks.clear();
+                return true;
+            case 1:
+            case 2:
+                a = 1;
+                ansStr = readString(body, 1);
+                Log.d(LOG_TAG, "PKTChangePrimGroupAns: "+ansStr);
+                return true;
+        }
+
+        return true;
+    }
+
+    public boolean PKTExitGroupAns(byte[] body) {
+        String ansStr;
+        int ansType = body[0];
+
+        switch (ansType) {
+            case 0:
+                return true;
+            case 1:
+                a = 1;
+                ansStr = readString(body, 1);
+                Log.d(LOG_TAG, "PKTExitGroupAns: "+ansStr);
+                return true;
+        }
+
+        return true;
+    }
+
+    public boolean PKTGroupKickAns(byte[] body) {
+        String ansStr;
+        int ansType = body[0];
+
+        switch (ansType) {
+            case 0:
+                return true;
+            case 1:
+            case 2:
+                a = 1;
+                ansStr = readString(body, 1);
+                Log.d(LOG_TAG, "PKTGroupKickAns: "+ansStr);
+                return true;
+        }
+
         return true;
     }
 
@@ -351,6 +453,36 @@ public class Client {
 
 
         sendPacket(PKT_MARKER_CREATE, body, body.length);
+    }
+
+    public void PTKChangeLead(int grId, int newLeadId) {
+        byte[] body = new byte[8];
+        int offset = 0;
+
+        offset = intToBytes(grId, body, offset);
+        intToBytes(newLeadId, body, offset);
+
+        sendPacket(PKT_GROUP_CHANGE_LEAD, body, body.length);
+    }
+
+    public void PKTChangePrimGroup(int grId) {
+        byte[] body = new byte[4];
+        intToBytes(grId, body, 0);
+        sendPacket(PKT_USER_CHANGE_PRIMGR, body, body.length);
+    }
+
+    public void PKTExitGroup(int grId) {
+        byte[] body = new byte[4];
+        intToBytes(grId, body, 0);
+        sendPacket(PKT_GROUP_EXIT, body, body.length);
+    }
+
+    public void PKTGroupKick(int grId, int memberId) {
+        byte[] body = new byte[8];
+        int offset = 0;
+        offset = intToBytes(grId, body, offset);
+        intToBytes(memberId, body, offset);
+        sendPacket(PKT_GROUP_KICK, body, body.length);
     }
 
     /* ==================== extra func ==================== */

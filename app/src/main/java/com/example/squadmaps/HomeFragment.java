@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 
 public class HomeFragment extends Fragment  {
-//    implements UserLocationObjectListener
     private MapHelper mapHelper;
 
     private RadioButton rbtnMove;
@@ -25,9 +24,9 @@ public class HomeFragment extends Fragment  {
             int id = rb.getId();
 
             Log.d("TAG", "onClick: "+id);
-            if (id == R.id.moveMarker) mapHelper.setCurMarkerType(MapHelper.MOVE_MARKER);
+            if (id == R.id.moveMarker) mapHelper.setCurMarkerType(SData.MOVE_MARKER);
             else if (id == R.id.homeMarker) {
-                mapHelper.setCurMarkerType(MapHelper.HOUSE_MARKER);
+                mapHelper.setCurMarkerType(SData.HOUSE_MARKER);
             }
         }
     };
@@ -36,19 +35,11 @@ public class HomeFragment extends Fragment  {
         mapHelper = mapHlp;
     }
 
-    public static HomeFragment newInstance(MapHelper mapHlp) {
-        HomeFragment fragment = new HomeFragment(mapHlp);
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    @SuppressLint("CutPasteId")
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
@@ -56,6 +47,7 @@ public class HomeFragment extends Fragment  {
         mapHelper.init(view, R.id.mapview, getViewLifecycleOwner());
         mapHelper.initMap(view, R.id.mapview);
         mapHelper.initListeners();
+        mapHelper.loadMarkers();
 
         rbtnMove = view.findViewById(R.id.moveMarker);
         rbtnMove.setOnClickListener(radioButtonClickListener);
@@ -70,7 +62,6 @@ public class HomeFragment extends Fragment  {
     public void onStop() {
         mapHelper.onStop();
         super.onStop();
-
     }
 
     @Override
