@@ -48,7 +48,7 @@ public class GroupListAdapter extends BaseExpandableListAdapter {
 
 
         ImageView img = view.findViewById(R.id.mark_icon);
-        if (member.isLead()) img.setImageResource(SData.USER_MARKER);
+        if (member.isLead()) img.setImageResource(SData.LEADER_MARKER);
         else img.setImageResource(SData.MEMBER_MARKER);
 
         return view;

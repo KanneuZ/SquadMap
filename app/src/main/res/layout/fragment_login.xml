@@ -12,7 +12,7 @@
         android:id="@+id/imageView"
         android:layout_width="160dp"
         android:layout_height="150dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="32dp"
         android:src="@drawable/logo2"
         app:layout_constraintBottom_toTopOf="@+id/textView3"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:gravity="center"
-        android:text="@string/top_info"
+        android:text="@string/top_info_login"
         android:textColor="@color/black"
         android:textSize="14sp"
         android:textStyle="normal"
@@ -70,7 +70,7 @@
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="88dp"
+        android:layout_marginBottom="100dp"
         android:gravity="center"
         android:text="@string/bottom_info"
         android:textColor="@color/black"
@@ -78,7 +78,7 @@
         android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText

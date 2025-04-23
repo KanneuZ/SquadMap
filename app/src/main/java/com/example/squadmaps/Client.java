@@ -39,6 +39,7 @@ public class Client {
     private final int PKT_USER_CHANGE_PRIMGR = 11;
     private final int PKT_GROUP_EXIT         = 12;
     private final int PKT_GROUP_KICK         = 13;
+    private final int PKT_MARKER_REM         = 14;
 
     ArrayList<GroupInfo> grArray = new ArrayList<>();
     ArrayList<MarkersInfo> mkr = new ArrayList<>();
@@ -114,6 +115,7 @@ public class Client {
             case 11: return PKTChangePrimGroupAns(body);
             case 12: return PKTExitGroupAns(body);
             case 13: return PKTGroupKickAns(body);
+            case 14: return PKTMarkerRemoveAns(body);
         }
 
         return false;
@@ -385,6 +387,25 @@ public class Client {
         return true;
     }
 
+    public boolean PKTMarkerRemoveAns(byte[] body) {
+        String ansStr;
+        int ansType = body[0];
+
+        switch (ansType) {
+            case 0:
+                SData.markerRem.postValue(bytesToInt(body, 1));
+                return true;
+            case 1:
+            case 2:
+                a = 1;
+                ansStr = readString(body, 1);
+                Log.d(LOG_TAG, "PKTGroupKickAns: "+ansStr);
+                return true;
+        }
+
+        return true;
+    }
+
     /* ==================== PKT qwr ==================== */
 
     public void PKTReg(String login, String password, String name) {
@@ -483,6 +504,14 @@ public class Client {
         offset = intToBytes(grId, body, offset);
         intToBytes(memberId, body, offset);
         sendPacket(PKT_GROUP_KICK, body, body.length);
+    }
+
+    public void PKTMarkerRemove(int grId, int markerId) {
+        byte[] body = new byte[8];
+        int offset = 0;
+        offset = intToBytes(grId, body, offset);
+        intToBytes(markerId, body, offset);
+        sendPacket(PKT_MARKER_REM, body, body.length);
     }
 
     /* ==================== extra func ==================== */

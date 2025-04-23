@@ -20,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     private MapHelper mapHelper;
     private MyApplication myApplication;
 
+    private int curId = R.id.profile;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -44,11 +46,13 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
 
-            if (id == R.id.profile) getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment(mapHelper)).commit();
+            if (id == curId) return true;
+            else if (id == R.id.profile) getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment(mapHelper)).commit();
             else if (id == R.id.settings) getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).commit();
             else if (id == R.id.info) getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AboutFragment()).commit();
             else if (id == R.id.group) getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new GroupFragment()).commit();
 
+            curId = id;
             return true;
         });
 

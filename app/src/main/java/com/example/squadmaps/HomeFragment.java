@@ -14,20 +14,26 @@ import android.widget.RadioButton;
 public class HomeFragment extends Fragment  {
     private MapHelper mapHelper;
 
-    private RadioButton rbtnMove;
-    private RadioButton rbtnHome;
-
     View.OnClickListener radioButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             RadioButton rb = (RadioButton)v;
             int id = rb.getId();
 
-            Log.d("TAG", "onClick: "+id);
-            if (id == R.id.moveMarker) mapHelper.setCurMarkerType(SData.MOVE_MARKER);
-            else if (id == R.id.homeMarker) {
-                mapHelper.setCurMarkerType(SData.HOUSE_MARKER);
-            }
+            if (id == R.id.moveMarker)           mapHelper.setCurMarkerType(SData.MOVE_MARKER);
+            else if (id == R.id.attentionMarker) mapHelper.setCurMarkerType(SData.ATTENTION_MARKER);
+            else if (id == R.id.carMarker)       mapHelper.setCurMarkerType(SData.CAR_MARKER);
+            else if (id == R.id.dangerMarker)    mapHelper.setCurMarkerType(SData.DANGER_MARKER);
+            else if (id == R.id.deathMarker)     mapHelper.setCurMarkerType(SData.DEATH_MARKER);
+            else if (id == R.id.fireMarker)      mapHelper.setCurMarkerType(SData.FIRE_MARKER);
+            else if (id == R.id.fishMarker)      mapHelper.setCurMarkerType(SData.FISH_MARKER);
+            else if (id == R.id.foodMarker)      mapHelper.setCurMarkerType(SData.FOOD_MARKER);
+            else if (id == R.id.happyMarker)     mapHelper.setCurMarkerType(SData.HAPPY_MARKER);
+            else if (id == R.id.houseMarker)     mapHelper.setCurMarkerType(SData.HOUSE_MARKER);
+            else if (id == R.id.pilzMarker)      mapHelper.setCurMarkerType(SData.PILZ_MARKER);
+            else if (id == R.id.secretMarker)    mapHelper.setCurMarkerType(SData.SECRET_MARKER);
+            else if (id == R.id.wetMarker)       mapHelper.setCurMarkerType(SData.WET_MARKER);
+            else if (id == R.id.workMarker)      mapHelper.setCurMarkerType(SData.WORK_MARKER);
         }
     };
 
@@ -49,11 +55,20 @@ public class HomeFragment extends Fragment  {
         mapHelper.initListeners();
         mapHelper.loadMarkers();
 
-        rbtnMove = view.findViewById(R.id.moveMarker);
-        rbtnMove.setOnClickListener(radioButtonClickListener);
-
-        rbtnHome = view.findViewById(R.id.homeMarker);
-        rbtnHome.setOnClickListener(radioButtonClickListener);
+        view.findViewById(R.id.moveMarker).setOnClickListener(radioButtonClickListener);
+        view.findViewById(R.id.attentionMarker).setOnClickListener(radioButtonClickListener);
+        view.findViewById(R.id.carMarker).setOnClickListener(radioButtonClickListener);
+        view.findViewById(R.id.dangerMarker).setOnClickListener(radioButtonClickListener);
+        view.findViewById(R.id.deathMarker).setOnClickListener(radioButtonClickListener);
+        view.findViewById(R.id.fireMarker).setOnClickListener(radioButtonClickListener);
+        view.findViewById(R.id.fishMarker).setOnClickListener(radioButtonClickListener);
+        view.findViewById(R.id.foodMarker).setOnClickListener(radioButtonClickListener);
+        view.findViewById(R.id.happyMarker).setOnClickListener(radioButtonClickListener);
+        view.findViewById(R.id.houseMarker).setOnClickListener(radioButtonClickListener);
+        view.findViewById(R.id.pilzMarker).setOnClickListener(radioButtonClickListener);
+        view.findViewById(R.id.secretMarker).setOnClickListener(radioButtonClickListener);
+        view.findViewById(R.id.wetMarker).setOnClickListener(radioButtonClickListener);
+        view.findViewById(R.id.workMarker).setOnClickListener(radioButtonClickListener);
 
         return view;
     }

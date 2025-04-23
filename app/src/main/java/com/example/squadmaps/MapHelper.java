@@ -57,9 +57,9 @@ public class MapHelper implements UserLocationObjectListener {
     private MapObjectCollection memberlocCol = null;
 
     private java.util.List<Point> points = new ArrayList<>();
-    private PolylineMapObject line;
     private PlacemarkMapObject moveMark = null;
     private PlacemarkMapObject userloc = null;
+    private PolylineMapObject line;
 
     private int curMarkerType = SData.MOVE_MARKER;
     private int curColor = 0;
@@ -67,12 +67,11 @@ public class MapHelper implements UserLocationObjectListener {
     private LinkedHashMap<Integer, PlacemarkMapObject> members = new LinkedHashMap<>();
     private LinkedHashMap<Integer, PlacemarkMapObject> markers = new LinkedHashMap<>();
     private ArrayList<PlacemarkMapObject> marks = new ArrayList<>();
-    private ArrayList<MapObjectCollection> groupsCol = new ArrayList<>();
 
     private final com.yandex.mapkit.location.LocationListener myLocationListener = new com.yandex.mapkit.location.LocationListener() {
         @Override
         public void onLocationUpdated(@NonNull Location location) {
-            if (userloc == null) userloc = userlocCol.addPlacemark(location.getPosition(), ImageProvider.fromResource(context, SData.MARKER));
+            if (userloc == null) userloc = userlocCol.addPlacemark(location.getPosition(), ImageProvider.fromResource(context, SData.USER_MARKER));
             else userloc.setGeometry(location.getPosition());
 
             userloc.setOpacity(1f);
@@ -84,16 +83,51 @@ public class MapHelper implements UserLocationObjectListener {
         public void onLocationStatusUpdated(@NonNull LocationStatus locationStatus) {}
     };
 
+    private final MapObjectTapListener delLst = new MapObjectTapListener() {
+        @Override
+        public boolean onMapObjectTap(@NonNull MapObject mapObject, @NonNull Point point) {
+            return delMarker(mapObject);
+        }
+    };
+
+    private boolean delMarker(MapObject mapObject) {
+        for (LinkedHashMap.Entry<Integer, PlacemarkMapObject> it : markers.entrySet()) {
+            if (it.getValue() != mapObject) continue;
+
+            myApplication.getCli().PKTMarkerRemove(SData.primGrId, it.getKey());
+            markers.remove(it.getKey());
+
+            it.getValue().getParent().remove(mapObject);
+
+            if (it.getValue().getParent() == moveMarkerCol) moveMark = null;
+            return true;
+        }
+
+        return false;
+    }
+
     private final InputListener tl = new InputListener() {
         @Override
         public void onMapTap(@NonNull Map map, @NonNull Point point) {
             int type, color;
 
-            if (curMarkerType == SData.MOVE_MARKER) type = 0;
-            else if (curMarkerType == SData.HOUSE_MARKER) type = 1;
+            if (curMarkerType == SData.MOVE_MARKER)           type = 0;
+            else if (curMarkerType == SData.ATTENTION_MARKER) type = 1;
+            else if (curMarkerType == SData.CAR_MARKER)       type = 2;
+            else if (curMarkerType == SData.DANGER_MARKER)    type = 3;
+            else if (curMarkerType == SData.DEATH_MARKER)     type = 4;
+            else if (curMarkerType == SData.FIRE_MARKER)      type = 5;
+            else if (curMarkerType == SData.FISH_MARKER)      type = 6;
+            else if (curMarkerType == SData.FOOD_MARKER)      type = 7;
+            else if (curMarkerType == SData.HAPPY_MARKER)     type = 8;
+            else if (curMarkerType == SData.HOUSE_MARKER)     type = 9;
+            else if (curMarkerType == SData.PILZ_MARKER)      type = 10;
+            else if (curMarkerType == SData.SECRET_MARKER)    type = 11;
+            else if (curMarkerType == SData.WET_MARKER)       type = 12;
+            else if (curMarkerType == SData.WORK_MARKER)      type = 13;
             else return;
 
-            placePoint(marksCol, new MarkersInfo(0, type, point));
+//            placePoint(marksCol, new MarkersInfo(0, type, point));
             myApplication.getCli().PKTMarkerCreate(type, 1, "TEST", point);
         }
 
@@ -101,20 +135,12 @@ public class MapHelper implements UserLocationObjectListener {
         public void onMapLongTap(@NonNull Map map, @NonNull Point point) {}
     };
 
-    private MapObjectTapListener mopt = new MapObjectTapListener() {
-        @Override
-        public boolean onMapObjectTap(@NonNull MapObject mapObject, @NonNull Point point) {
-            marksCol.remove(mapObject);
-            return true;
-        }
-    };
-
     Observer<UserInfo> memberMarkersObs = new Observer<>() {
         @Override
         public void onChanged(UserInfo userInfo) {
             PlacemarkMapObject point = members.get(userInfo.getId());
             if (point == null) {
-                point = placePoint(memberlocCol, new MarkersInfo(0, SData.MEMBER_MARKER, new Point(userInfo.getLatitude(), userInfo.getLongitude())));
+                point = placePoint(memberlocCol, new MarkersInfo(0, userInfo.isLead() ? SData.LEADER_MARKER : SData.MEMBER_MARKER, new Point(userInfo.getLatitude(), userInfo.getLongitude())));
                 members.put(userInfo.getId(), point);
                 return;
             }
@@ -143,6 +169,20 @@ public class MapHelper implements UserLocationObjectListener {
         }
     };
 
+    Observer<Integer> markRem = new Observer<Integer>() {
+        @Override
+        public void onChanged(Integer integer) {
+            PlacemarkMapObject obj;
+            obj = markers.get(integer);
+            if (obj == null) return;
+
+            obj.getParent().remove(obj);
+            if (obj.getParent() == moveMarkerCol) moveMark = null;
+
+            markers.remove(integer);
+        }
+    };
+
     public MapHelper(String key, Context c, MyApplication myApp) {
         APIkey = key;
         context = c;
@@ -163,6 +203,7 @@ public class MapHelper implements UserLocationObjectListener {
 
         SData.userPoint.observe(onw, memberMarkersObs);
         SData.marker.observe(onw, markersObserver);
+        SData.markerRem.observe(onw, markRem);
 
         locationManager = null;
         locationManager = mapKit.createLocationManager();
@@ -239,11 +280,13 @@ public class MapHelper implements UserLocationObjectListener {
         if (markersInfo == null) return null;
         if (markersInfo.getType() == SData.MOVE_MARKER) return placeMoveMark(markersInfo);
 
-        PlacemarkMapObject placemark;
-        placemark = col.addPlacemark(markersInfo.getPoint(), ImageProvider.fromResource(context, markersInfo.getType()));
-        placemark.setOpacity(1f);
+        PlacemarkMapObject placeMark;
+        placeMark = col.addPlacemark(markersInfo.getPoint(), ImageProvider.fromResource(context, markersInfo.getType()));
+        placeMark.setOpacity(1f);
 
-        return placemark;
+        if (col != userlocCol) placeMark.addTapListener(delLst);
+
+        return placeMark;
     }
 
     private void placeLine(MapObjectCollection col, Point point1, Point point2) {

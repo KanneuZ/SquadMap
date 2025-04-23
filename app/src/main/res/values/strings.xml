@@ -17,10 +17,16 @@
     <string name="password_hint">Password</string>
     <string name="login_btn">Continue</string>
     <string name="goto_btn">Go to registration</string>
-    <string name="top_info"><b>Create an account</b>\nEnter your login, username and passoword to sign up for this app</string>
+    <string name="top_info"><b>Create an account</b>\nEnter your login, username and password to sign up for this app</string>
     <string name="bottom_info">By clicking continue, you agree to our <b>Terms of Service</b> and <b>Privacy Policy</b></string>
 
     <!-- Registration Fragment -->
+
+    <!-- Login Fragment   -->
+
+    <string name="top_info_login"><b>Login in to the system</b>\nEnter your login and password to login</string>
+
+    <!-- Login Fragment   -->
 
     <!-- Group Fragment -->
 
@@ -39,5 +45,24 @@
     <!-- Group Fragment -->
 
 
+    <!-- Home Fragment   -->
+
+    <string name="rb_marker_move">Move</string>
+
+    <string name="rb_marker_attention">Attention</string>
+    <string name="rb_marker_car">Car</string>
+    <string name="rb_marker_danger">Danger</string>
+    <string name="rb_marker_death">Death</string>
+    <string name="rb_marker_fire">Fire</string>
+    <string name="rb_marker_fish">Fish</string>
+    <string name="rb_marker_food">Food</string>
+    <string name="rb_marker_happy">Happy</string>
+    <string name="rb_marker_house">house</string>
+    <string name="rb_marker_pilz">Pilz</string>
+    <string name="rb_marker_secret">Secret</string>
+    <string name="rb_marker_wet">Wet</string>
+    <string name="rb_marker_work">Work</string>
+
+    <!-- Home Fragment   -->
 
 </resources>

@@ -7,40 +7,192 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:id="@+id/moveMarker"
+    <HorizontalScrollView
+        android:id="@+id/rbGr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <RadioGroup
+            android:id="@+id/radioGroup"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableStart="@android:drawable/ic_delete"
-            android:checked="true"
-            android:text="Move marker"
-            android:button="@null"
-            android:background="@drawable/custom_radoi_button"/>
+            android:layout_height="fill_parent"
+            android:orientation="horizontal">
 
-        <RadioButton
-            android:id="@+id/homeMarker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@android:drawable/ic_dialog_alert"
-            android:text="Attention marker"
-            android:button="@null"
-            android:background="@drawable/custom_radoi_button"/>
-    </RadioGroup>
+            <RadioButton
+                android:id="@+id/moveMarker"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/custom_radio_button"
+                android:button="@null"
+                android:checked="true"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:drawableStart="@drawable/marker_move"
+                android:text="@string/rb_marker_move" />
 
+            <RadioButton
+                android:id="@+id/attentionMarker"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/custom_radio_button"
+                android:button="@null"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:drawableStart="@drawable/marker_attention"
+                android:text="@string/rb_marker_attention" />
+
+            <RadioButton
+                android:id="@+id/carMarker"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/custom_radio_button"
+                android:button="@null"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:drawableStart="@drawable/marker_car"
+                android:text="@string/rb_marker_car" />
+
+            <RadioButton
+                android:id="@+id/dangerMarker"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/custom_radio_button"
+                android:button="@null"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:drawableStart="@drawable/marker_danger"
+                android:text="@string/rb_marker_danger" />
+
+            <RadioButton
+                android:id="@+id/deathMarker"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/custom_radio_button"
+                android:button="@null"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:drawableStart="@drawable/marker_death"
+                android:text="@string/rb_marker_death" />
+
+            <RadioButton
+                android:id="@+id/fireMarker"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/custom_radio_button"
+                android:button="@null"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:drawableStart="@drawable/marker_fire"
+                android:text="@string/rb_marker_fire" />
+
+            <RadioButton
+                android:id="@+id/fishMarker"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/custom_radio_button"
+                android:button="@null"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:drawableStart="@drawable/marker_fish"
+                android:text="@string/rb_marker_fish" />
+
+            <RadioButton
+                android:id="@+id/foodMarker"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/custom_radio_button"
+                android:button="@null"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:drawableStart="@drawable/marker_food"
+                android:text="@string/rb_marker_food" />
+
+            <RadioButton
+                android:id="@+id/happyMarker"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/custom_radio_button"
+                android:button="@null"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:drawableStart="@drawable/marker_happy"
+                android:text="@string/rb_marker_happy" />
+
+            <RadioButton
+                android:id="@+id/houseMarker"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/custom_radio_button"
+                android:button="@null"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:drawableStart="@drawable/marker_house"
+                android:text="@string/rb_marker_house" />
+
+            <RadioButton
+                android:id="@+id/pilzMarker"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/custom_radio_button"
+                android:button="@null"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:drawableStart="@drawable/marker_pilz"
+                android:text="@string/rb_marker_pilz" />
+
+            <RadioButton
+                android:id="@+id/secretMarker"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/custom_radio_button"
+                android:button="@null"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:drawableStart="@drawable/marker_secret"
+                android:text="@string/rb_marker_secret" />
+
+            <RadioButton
+                android:id="@+id/wetMarker"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/custom_radio_button"
+                android:button="@null"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:drawableStart="@drawable/marker_wet"
+                android:text="@string/rb_marker_wet" />
+
+            <RadioButton
+                android:id="@+id/workMarker"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/custom_radio_button"
+                android:button="@null"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:drawableStart="@drawable/marker_work"
+                android:text="@string/rb_marker_work" />
+        </RadioGroup>
+    </HorizontalScrollView>
 
     <com.yandex.mapkit.mapview.MapView
         android:id="@+id/mapview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/radioGroup"
+        android:layout_below="@+id/rbGr"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
