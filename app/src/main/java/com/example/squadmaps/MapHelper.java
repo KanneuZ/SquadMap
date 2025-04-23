@@ -76,6 +76,7 @@ public class MapHelper implements UserLocationObjectListener {
 
             userloc.setOpacity(1f);
             if (moveMark != null) placeLine(moveLineCol, userloc.getGeometry(), moveMark.getGeometry());
+            SData.userLocation.postValue(userloc.getGeometry());
             myApplication.getCli().PKTUserCord(userloc.getGeometry());
         }
 
@@ -140,7 +141,7 @@ public class MapHelper implements UserLocationObjectListener {
         public void onChanged(UserInfo userInfo) {
             PlacemarkMapObject point = members.get(userInfo.getId());
             if (point == null) {
-                point = placePoint(memberlocCol, new MarkersInfo(0, userInfo.isLead() ? SData.LEADER_MARKER : SData.MEMBER_MARKER, new Point(userInfo.getLatitude(), userInfo.getLongitude())));
+                point = placePoint(memberlocCol, new MarkersInfo(0, userInfo.getId() == SData.primGrLeadId ? SData.LEADER_MARKER : SData.MEMBER_MARKER, new Point(userInfo.getLatitude(), userInfo.getLongitude())));
                 members.put(userInfo.getId(), point);
                 return;
             }

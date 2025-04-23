@@ -2,15 +2,14 @@ package com.example.squadmaps;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.yandex.mapkit.map.MapObjectCollection;
-import com.yandex.mapkit.map.PlacemarkMapObject;
+import com.yandex.mapkit.geometry.Point;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 public class SData {
 	public static Integer id = 0;
 	public static Integer primGrId = 0;
+	public static Integer primGrLeadId = 0;
 
 	public static String login = "";
 	public static String password = "";
@@ -21,6 +20,9 @@ public class SData {
 	public static MutableLiveData<UserInfo> userPoint = new MutableLiveData<>();
 	public static MutableLiveData<ArrayList<MarkersInfo>> marker = new MutableLiveData<>();
 	public static MutableLiveData<Integer> markerRem = new MutableLiveData<>();
+
+	public static MutableLiveData<String> primGrName = new MutableLiveData<>();
+	public static MutableLiveData<Point> userLocation = new MutableLiveData<>();
 
 	public static ArrayList<MarkersInfo> marks = new ArrayList<>();
 

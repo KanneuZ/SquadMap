@@ -1,15 +1,18 @@
 package com.example.squadmaps;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.Observer;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.yandex.mapkit.geometry.Point;
 
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
@@ -56,10 +59,32 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
+        SData.primGrName.observe(this, obsGroup);
+        SData.userLocation.observe(this, obsCoords);
+
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         tv = headerView.findViewById(R.id.username);
         coord = headerView.findViewById(R.id.user_coord);
+        TextView tv2 = headerView.findViewById(R.id.prim_gr);
+        tv2.setText(SData.primGrName.getValue());
         tv.setText(SData.userName);
     }
+
+    private final Observer<String> obsGroup = s -> {
+		Log.d("TAG", "onChanged: " + s);
+		NavigationView navigationView = findViewById(R.id.nav_view);
+		View headerView = navigationView.getHeaderView(0);
+		TextView tv = headerView.findViewById(R.id.prim_gr);
+		tv.setText(s);
+	};
+
+    private final Observer<Point> obsCoords = p -> {
+        Log.d("TAG", "onChanged: " + p);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        TextView tv = headerView.findViewById(R.id.user_coord);
+
+        tv.setText(p.getLatitude()+" "+p.getLongitude());
+    };
 }

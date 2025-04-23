@@ -209,10 +209,6 @@ public class Client {
         a = 0;
         grId = bytesToInt(body, a);
         mode = (body[a+4]&0xFF) + ((body[a+5]&0xFF)<<8);
-        if ((mode & (1 << 4)) != 0) {
-            group.setPrim(true);
-            SData.primGrId = grId;
-        }
 
         a += 7;
         grName = readString(body, a);
@@ -220,6 +216,10 @@ public class Client {
 
         group.setName(grName);
         group.setId(grId);
+        if ((mode & (1 << 4)) != 0) {
+            group.setPrim(true);
+            SData.primGrId = grId;
+        }
 
         while (a < body.length-1) {
             memberId = bytesToInt(body, a);
@@ -241,6 +241,11 @@ public class Client {
 
         group.setProductList(childs);
         group.setLeadId(childs.get(0).getId());
+
+        if (grId == SData.primGrId) {
+            SData.primGrName.postValue(group.getName());
+            SData.primGrLeadId = group.getLeadId();
+        }
 
         grArray.add(group);
         SData.groupArray.postValue(grArray);
