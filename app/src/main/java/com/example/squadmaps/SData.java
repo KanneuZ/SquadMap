@@ -1,3 +1,4 @@
+/*КЛАСС ДЛЯ ХРАНЕНИЯ ГЛОБАЛЬНЫХ ПЕРЕМЕННЫХ.*/
 package com.example.squadmaps;
 
 import androidx.lifecycle.MutableLiveData;
