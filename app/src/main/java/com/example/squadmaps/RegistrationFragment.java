@@ -1,3 +1,4 @@
+
 package com.example.squadmaps;
 
 import android.app.Activity;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/*класс фрагмента регистрации.*/
 public class RegistrationFragment extends Fragment {
 
 	private DatabaseHelper databaseHelper;
@@ -37,20 +39,27 @@ public class RegistrationFragment extends Fragment {
 		reg(login, password, username);
 	};
 
-	public RegistrationFragment(MyApplication myApp) { myApplication = myApp; }
+	public RegistrationFragment(MyApplication myApp) { myApplication = myApp; } //констуртор.
 
 	@Override
+	/*создание фрагмента.
+	входные значения: сохраненное состояние фрагмента .
+  	возвращаемые значения: - .*/
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
 
 	@Override
+	/*присоединение фрагмента к активити.
+	входные значения: контекст.
+  	возвращаемые значения: - .*/
 	public void onAttach(@NonNull Context context) {
 		super.onAttach(context);
 		activity = (Activity) context;
 	}
 
 	@Override
+	/*аааААААааАААаАаАааАаААА*/
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_registration, container, false);
 
@@ -66,6 +75,9 @@ public class RegistrationFragment extends Fragment {
 		return view;
 	}
 
+	/*сам метод регистрации пользователя.
+	входные значения: логин, пароль, имя пользователя.
+  	возвращаемые значения: - .*/
 	private void reg(String login, String password, String username) {
 		if (login.isEmpty() || username.isEmpty() || password.isEmpty()) {
             Toast.makeText(context, "Заполните все поля!", Toast.LENGTH_SHORT).show();
