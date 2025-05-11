@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+/*класс фрагмента для авторизации.*/
 public class LoginFragment extends Fragment {
 
 	private MyApplication myApplication;
@@ -29,6 +30,9 @@ public class LoginFragment extends Fragment {
 
 	View.OnClickListener lstGoto = new View.OnClickListener() {
 		@Override
+		/*обработка переключения к регистрации.
+ 		входные значения: нажатая кнопка???.
+  		возвращаемые значения: - .*/ 
 		public void onClick(View v) {
 			((Itest) activity).msgFromFragment();
 		}
@@ -36,6 +40,9 @@ public class LoginFragment extends Fragment {
 
 	View.OnClickListener lstLog = new View.OnClickListener() {
 		@Override
+		/*обработка входа.
+ 		входные значения: нажатая кнопка???.
+  		возвращаемые значения: - .*/ 
 		public void onClick(View v) {
 			String login, password;
 
@@ -53,20 +60,35 @@ public class LoginFragment extends Fragment {
 		}
 	};
 
-	public LoginFragment(MyApplication myApp) { myApplication = myApp; }
+	public LoginFragment(MyApplication myApp) { myApplication = myApp; } //конструктор.
 
 	@Override
+	/*создание фрагмента.
+	входные значения: состояние фрагмента.
+  	возвращаемые значения: - .*/ 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
 
 	@Override
+	/*прикрепление фрагмента к активити.
+	входные значения: контекст.
+  	возвращаемые значения: - .*/ 
 	public void onAttach(@NonNull Context context) {
 		super.onAttach(context);
 		activity = (Activity) context;
 	}
 
 	@Override
+	/*Брежнев в первый день Пасхи приехал в Кремль. Его встречает Устинов:
+
+- Христос воскрес, Леонид Ильич !
+
+Брежнев кивнул и пошел дальше. Навстречу Черненко, подхалимски улыбаясь:
+
+- Христос воскрес, Леонид Ильич !
+
+- Спасибо, мне уже доложили.*/
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_login, container, false);
 
@@ -83,7 +105,10 @@ public class LoginFragment extends Fragment {
 
 		return view;
 	}
-
+	
+	/*сам метод авторизации пользователя.
+	входные значения: логин, пароль.
+  	возвращаемые значения: - .*/ 
 	private void log(String login, String password) {
 		if (login.isEmpty() || password.isEmpty()) {
 			Toast.makeText(context, "Заполните все поля!", Toast.LENGTH_SHORT).show();
