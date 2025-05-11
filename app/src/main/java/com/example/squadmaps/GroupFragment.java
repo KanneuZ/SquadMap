@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Objects;
 
+/*класс фрагмента для управления группами пользователей.*/
 public class GroupFragment extends Fragment {
 
     private LinkedHashMap<Integer, GroupInfo> subjects = new LinkedHashMap<>();
@@ -40,6 +41,7 @@ public class GroupFragment extends Fragment {
 
     private MyApplication myApplication;
 
+	/*обработка создания группы.*/
     private final View.OnClickListener btnCreateGroupListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -57,6 +59,7 @@ public class GroupFragment extends Fragment {
         }
     };
 
+	/*обработка входа в группу.*/
     private final View.OnClickListener btnJoinGroupListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -91,7 +94,7 @@ public class GroupFragment extends Fragment {
         }
 	};
 
-    public GroupFragment() {}
+    public GroupFragment() {} //пустой конструктор. 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -127,6 +130,9 @@ public class GroupFragment extends Fragment {
         return view;
     }
 
+	/*создание всплвающего окна для ввода данных группы.
+ 	входные значения: заголовок окна, обработчик кнопки подтверждения, ширина окна, высота окна.
+  	возвращаемые значения: созданное всплывающее окно.*/
     private PopupWindow createWindowPopup(String title, View.OnClickListener btnAcceptListener, int width, int height) {
         LayoutInflater inflater = getLayoutInflater();
         View popupView = inflater.inflate(R.layout.grouppopup, null);
@@ -214,6 +220,9 @@ public class GroupFragment extends Fragment {
         return true;
     }
 
+	/*создание группы.
+ 	входные значения: данные группы, данные пользователя.
+  	возвращаемые значения: - .*/
     private void createGr(GroupInfo group, UserInfo user) {
         int i, groupPos;
 
@@ -269,6 +278,9 @@ public class GroupFragment extends Fragment {
         headerInfo.setProductList(productList);
     }
 
+	/*проверка валидности данных группы.
+ 	входные значения: название группы, пароль.
+  	возвращаемые значения: true если валидны.*/
     private boolean isValid(String name, String password) {
         if (name.isEmpty()) return false;
 
