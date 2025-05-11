@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
+/*класс активити для регистрации и авторизации.*/
 public class LoginActivity extends AppCompatActivity implements Itest {
     private DatabaseHelper databaseHelper;
     private MyApplication myApplication;
@@ -19,6 +20,9 @@ public class LoginActivity extends AppCompatActivity implements Itest {
 
     private final Observer<Boolean> observer = new Observer<>() {
         @Override
+        /*наблюдение статуса регистрации.
+ 	    входные значения: текущий статус регистрации.
+  	    возвращаемые значения: - .*/ 
         public void onChanged(Boolean aBoolean) {
             if (Boolean.TRUE.equals(SData.isReg.getValue())) {
                 if (!databaseHelper.checklogin(SData.login)) databaseHelper.insertData(SData.login, SData.password, SData.userName);
@@ -29,6 +33,9 @@ public class LoginActivity extends AppCompatActivity implements Itest {
     };
 
     @Override
+    /*создание активити.
+ 	входные значения: сохраненное состояние.
+  	возвращаемые значения: - .*/ 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
@@ -42,6 +49,9 @@ public class LoginActivity extends AppCompatActivity implements Itest {
         else startActivity(new Intent(LoginActivity.this, MainActivity.class));
     }
 
+    /*сообщение из фрагмента.
+ 	входные значения: - .
+  	возвращаемые значения: - .*/ 
     public void msgFromFragment() {
         if (flg) getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoginFragment(myApplication)).commit();
         else getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new RegistrationFragment(myApplication)).commit();
