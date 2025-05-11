@@ -15,23 +15,33 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/*вспомогатальный класс для работы с базой данных SQL.*/
+
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DBNAME = "MyLogin2.db";
+    /*конструктор.*/
     public DatabaseHelper(Context context) {
         super(context, DBNAME, null, 5);
     }
 
     @Override
+    /*создание таблицы при запуске. 
+    входящиие данные: обьект базы данных.*/
     public void onCreate(SQLiteDatabase MyDB) {
         MyDB.execSQL("create Table users(login TEXT primary key, password TEXT, username TEXT)");
     }
 
     @Override
+    /*обновление данных при изменениях. 
+    входящие данные: обьект базы данных, старая версия таблицы, новая версия таблицы??*/
     public void onUpgrade(SQLiteDatabase MyDB, int i, int i1) {
         MyDB.execSQL("drop Table if exists users");
         MyDB.execSQL("create Table users(login TEXT primary key, password TEXT, username TEXT)");
     }
 
+    /*проверка существования логина в БД.
+ 	входные значения: логин.
+  	возвращаемые значения: true/false.*/
     public Boolean checklogin(String login) {
         SQLiteDatabase MyDB = this.getWritableDatabase();
         Cursor cursor = MyDB.rawQuery("Select * from users where login = ?", new String[]{login});
@@ -41,6 +51,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor.getCount() > 0;
     }
 
+    /*вставка новых данных.
+ 	входные значения: логин, пароль, имя пользователя.
+  	возвращаемые значения: true - успешно/false - ошибка.*/
     public Boolean insertData(String login, String password, String username) {
         SQLiteDatabase MyDB = this.getWritableDatabase();
 
@@ -57,6 +70,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
+    /*проверка на существование конкретных логина, пароля и имени пользователя.
+ 	входные значения: логин, пароль, имя пользователя.
+  	возвращаемые значения: true - если сущетвует/false - не существует.*/
     public Boolean check(String login, String password, String username) {
         SQLiteDatabase MyDB = this.getWritableDatabase();
         Cursor cursor = MyDB.rawQuery("Select * from users where login = ? and password = ? and username = ?", new String[] {login,password,username});
@@ -67,6 +83,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 //    login password username
 
+    /*получение логина.
+ 	входные значения: - .
+  	возвращаемые значения: логин или ноль если данных нет.*/
     public String getLogin() {
         SQLiteDatabase MyDB = this.getWritableDatabase();
         Cursor cursor = MyDB.rawQuery("Select * from users", null);
@@ -76,6 +95,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor.getString(0);
     }
 
+    /*получение пароля.
+ 	входные значения: - .
+  	возвращаемые значения: пароль или ноль если данных нет.*/
     public String getPassword() {
         SQLiteDatabase MyDB = this.getWritableDatabase();
         Cursor cursor = MyDB.rawQuery("Select * from users", null);
@@ -85,6 +107,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor.getString(1);
     }
 
+    /*получение имени пользователя.
+ 	входные значения: - .
+  	возвращаемые значения: имя пользователя или ноль если данных нет.*/
     public String getUsername() {
         SQLiteDatabase MyDB = this.getWritableDatabase();
         Cursor cursor = MyDB.rawQuery("Select * from users", null);
