@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+/*класс*/
 public class MyApplication extends android.app.Application {
     private final String LOG_TAG = "MyApplication";
 
@@ -14,28 +15,43 @@ public class MyApplication extends android.app.Application {
     private Client cli  = null;
     private static MyApplication instance;
 
+    /*возвращает клиент для работы с сервером.
+	входные значения: - .
+  	возвращаемые значения: клиент.*/
     public Client getCli() {
         return cli;
     }
 
     @Override
+    /*создание приложения??.
+	входные значения: - .
+  	возвращаемые значения: - .*/
     public void onCreate() {
         instance = this;
         super.onCreate();
         connect();
     }
-
+    
+	/*получение контекста.
+	входные значения: - .
+  	возвращаемые значения: пример.*/
     public static Context getContext() {
         return instance;
         // or return instance.getApplicationContext();
     }
 
     @Override
+	/*завершение работы приложения???.
+	входные значения: - .
+  	возвращаемые значения: -.*/
     public void onTerminate() {
         super.onTerminate();
         disconnected();
     }
-
+    
+	/*метод устанавливает соединение с сервером.
+	входные значения: - .
+  	возвращаемые значения: - .*/
     private void connect() {
         cli = new Client(HOST, PORT);
         try {
@@ -45,7 +61,10 @@ public class MyApplication extends android.app.Application {
             cli = null;
         }
     }
-
+    
+	/*метод закрывает соединение с сервером.
+	входные значения: - .
+  	возвращаемые значения: - .*/
     private void disconnected() {
         cli.closeConnection();
     }
