@@ -2,13 +2,17 @@ package com.example.squadmaps;
 
 import com.yandex.mapkit.geometry.Point;
 
+/*класс с информацией о метках.*/
 public class MarkersInfo {
 	private int id;
 	private int type;
 	private Point point = null;
 
-	public MarkersInfo() {}
+	public MarkersInfo() {} //констурктор.
 
+	/*констурктор с параметрами.
+	входные значения: айди, тип метки, координаты метки..
+  	возвращаемые значения: - .*/ 
 	public MarkersInfo(int id, int type, Point point) {
 		this.id = id;
 		this.point = point;
@@ -60,27 +64,44 @@ public class MarkersInfo {
 			default: this.type = type;
 		}
 	}
-
+	/*получение айди метки.
+	входные значения: - .
+  	возвращаемые значения: айди метки.*/ 
 	public int getId() {
 		return id;
 	}
 
+	/*установка айди метки.
+	входные значения: айди метки .
+  	возвращаемые значения: - .*/
 	public void setId(int id) {
 		this.id = id;
 	}
 
+	/*получение типа метки.
+	входные значения: - .
+  	возвращаемые значения: тип метки.*/
 	public int getType() {
 		return type;
 	}
-
+	
+	/*установка типа метки.
+	входные значения: тип метки .
+  	возвращаемые значения: - .*/
 	public void setType(int type) {
 		this.type = type;
 	}
 
+	/*получение координат метки.
+	входные значения: - .
+  	возвращаемые значения: координата метки.*/
 	public Point getPoint() {
 		return point;
 	}
-
+	
+	/*установка координаты метки.
+	входные значения: координата метки .
+  	возвращаемые значения: - .*/
 	public void setPoint(Point point) {
 		this.point = point;
 	}
