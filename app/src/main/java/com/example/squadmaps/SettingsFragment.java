@@ -13,6 +13,8 @@ import android.view.ViewGroup;
  * Use the {@link SettingsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+
+/*класс для фрагмента настроек приложения.*/
 public class SettingsFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -25,7 +27,7 @@ public class SettingsFragment extends Fragment {
     private String mParam2;
 
     public SettingsFragment() {
-        // Required empty public constructor
+        // обязательный пустой конструктор.
     }
 
     /**
@@ -37,6 +39,10 @@ public class SettingsFragment extends Fragment {
      * @return A new instance of fragment SettingsFragment.
      */
     // TODO: Rename and change types and number of parameters
+
+    /*метод для создания нового экзепляра фрагмента.
+	входные значения: параметр 1, параметр 2.
+  	возвращаемые значения: новый экземпляр.*/
     public static SettingsFragment newInstance(String param1, String param2) {
         SettingsFragment fragment = new SettingsFragment();
         Bundle args = new Bundle();
@@ -47,6 +53,9 @@ public class SettingsFragment extends Fragment {
     }
 
     @Override
+    /*создание фрагмента.
+	входные значения: сохранненое состояние фрагмента.
+  	возвращаемые значения: - .*/
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
@@ -56,6 +65,7 @@ public class SettingsFragment extends Fragment {
     }
 
     @Override
+    /*блять*/
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
