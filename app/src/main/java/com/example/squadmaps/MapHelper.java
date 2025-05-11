@@ -31,6 +31,7 @@ import com.yandex.runtime.image.ImageProvider;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+/*вспомогательный класс для работы с картой.*/
 public class MapHelper implements UserLocationObjectListener {
     private String APIkey;
     private final Context context;
@@ -68,6 +69,10 @@ public class MapHelper implements UserLocationObjectListener {
     private LinkedHashMap<Integer, PlacemarkMapObject> markers = new LinkedHashMap<>();
     private ArrayList<PlacemarkMapObject> marks = new ArrayList<>();
 
+	
+	/*слушатель для геолокации пользователя.
+	входные значения: местоположение.
+  	возвращаемые значения: - .*/ 
     private final com.yandex.mapkit.location.LocationListener myLocationListener = new com.yandex.mapkit.location.LocationListener() {
         @Override
         public void onLocationUpdated(@NonNull Location location) {
@@ -81,16 +86,24 @@ public class MapHelper implements UserLocationObjectListener {
         }
 
         @Override
+	/*обновление статуса местоположения.
+	входные значения: статус местоположения.
+  	возвращаемые значения: - .*/ 
         public void onLocationStatusUpdated(@NonNull LocationStatus locationStatus) {}
     };
-
+	/*слушатель нажатия на метку????.
+	входные значения: обьект на карте, координаты нажатия.
+  	возвращаемые значения: true/false.*/ 
     private final MapObjectTapListener delLst = new MapObjectTapListener() {
         @Override
         public boolean onMapObjectTap(@NonNull MapObject mapObject, @NonNull Point point) {
             return delMarker(mapObject);
         }
     };
-
+	
+	/*удаление метки.
+	входные значения: обьект удаления.
+  	возвращаемые значения: true/false.*/ 
     private boolean delMarker(MapObject mapObject) {
         for (LinkedHashMap.Entry<Integer, PlacemarkMapObject> it : markers.entrySet()) {
             if (it.getValue() != mapObject) continue;
@@ -107,6 +120,9 @@ public class MapHelper implements UserLocationObjectListener {
         return false;
     }
 
+	/*нажатие на карту????.
+	входные значения: ???карта??точка нажатия???.
+  	возвращаемые значения: - .*/ 
     private final InputListener tl = new InputListener() {
         @Override
         public void onMapTap(@NonNull Map map, @NonNull Point point) {
@@ -133,9 +149,15 @@ public class MapHelper implements UserLocationObjectListener {
         }
 
         @Override
+	/*обработка долгого нажатия.
+	входные значения: карта, точка нажатия.
+  	возвращаемые значения: - .*/ 
         public void onMapLongTap(@NonNull Map map, @NonNull Point point) {}
     };
 
+	/*наблюдатель за метками участников.
+	входные значения: информация об участнике.
+  	возвращаемые значения: - .*/ 
     Observer<UserInfo> memberMarkersObs = new Observer<>() {
         @Override
         public void onChanged(UserInfo userInfo) {
@@ -150,6 +172,9 @@ public class MapHelper implements UserLocationObjectListener {
         }
     };
 
+	/*наблюдатель за метками.
+	входные значения: информация о метках.
+  	возвращаемые значения: - .*/ 
     Observer<ArrayList<MarkersInfo>> markersObserver = new Observer<>() {
         @Override
         public void onChanged(ArrayList<MarkersInfo> markersInfo) {
@@ -170,6 +195,9 @@ public class MapHelper implements UserLocationObjectListener {
         }
     };
 
+	/*наблюдатель за удалением меток.
+	входные значения: число???.
+  	возвращаемые значения: - .*/ 
     Observer<Integer> markRem = new Observer<Integer>() {
         @Override
         public void onChanged(Integer integer) {
@@ -184,6 +212,7 @@ public class MapHelper implements UserLocationObjectListener {
         }
     };
 
+	/*констурктор.*/
     public MapHelper(String key, Context c, MyApplication myApp) {
         APIkey = key;
         context = c;
@@ -191,12 +220,14 @@ public class MapHelper implements UserLocationObjectListener {
         initializeAPI();
     }
 
+	/*инициализация АПИ карт.*/
     public void initializeAPI() {
         MapKitFactory.setApiKey(APIkey);
         MapKitFactory.initialize(context);
         isInitAPI = true;
     }
 
+	/*??????????????????опять окошки*/
     public void init(View view, int id, LifecycleOwner onw) {
         initMap(view, id);
         initCols();
@@ -267,6 +298,7 @@ public class MapHelper implements UserLocationObjectListener {
         subscribeToLocationUpdate();
     }
 
+	/*установка метки движения.*/
     private PlacemarkMapObject placeMoveMark(MarkersInfo markersInfo) {
         if (markersInfo == null) return null;
 
@@ -277,6 +309,7 @@ public class MapHelper implements UserLocationObjectListener {
         return moveMark;
     }
 
+	/*установка точки??*/
     private PlacemarkMapObject placePoint(MapObjectCollection col, MarkersInfo markersInfo) {
         if (markersInfo == null) return null;
         if (markersInfo.getType() == SData.MOVE_MARKER) return placeMoveMark(markersInfo);
@@ -290,6 +323,7 @@ public class MapHelper implements UserLocationObjectListener {
         return placeMark;
     }
 
+	/*установка линии между меткой движения и геолокацией пользователя.*/
     private void placeLine(MapObjectCollection col, Point point1, Point point2) {
         if (point1 == null || point2 == null) return;
         col.clear();
