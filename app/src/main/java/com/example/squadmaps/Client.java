@@ -11,22 +11,28 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.Semaphore;
 
+/*класс клиент для взаимодействия с сервером.*/
+
 public class Client {
+	/*для подключения.*/
     private Socket mSocket = null;
     private String mHost = null;
     private int mPort = 0;
     public static final String LOG_TAG = "SOCKET";
 
+	/*для синхронизации потоков.*/
     private final Semaphore SEMAPHORE = new Semaphore(0);
     private final ArrayList<byte[]> outQ = new ArrayList<>();
     private final byte[] inQ = new byte[65536];
 
+	/*потоки.*/
     private int inDataSize = 0;
     private Thread readThr = null;
     private Thread writeThr = null;
     private int a;
     private boolean isRegistered = false;
 
+	/*константы типы пакетов.*/
     private final int PKT_POOL_TEST          = 0;
     private final int PKT_USER_REG           = 1;
     private final int PKT_USER_LOGIN         = 2;
@@ -41,21 +47,26 @@ public class Client {
     private final int PKT_GROUP_KICK         = 13;
     private final int PKT_MARKER_REM         = 14;
 
-    ArrayList<GroupInfo> grArray = new ArrayList<>();
-    ArrayList<MarkersInfo> mkr = new ArrayList<>();
+    ArrayList<GroupInfo> grArray = new ArrayList<>(); //информация о группах
+    ArrayList<MarkersInfo> mkr = new ArrayList<>(); //информация о метках
+
+	/*констуртор.*/
     public Client() {}
 
+	/*констуртор.*/
     public Client (final String host, final int port) {
         this.mHost = host;
         this.mPort = port;
     }
 
+	/*установка соединения с сервером.*/
     public void openConnection() throws Exception  {
         closeConnection();
         readThr = new Thread(new ReadServerThread());
         readThr.start();
     }
 
+	/*закрытие соединения с сервером.*/
     public void closeConnection() {
         if (mSocket != null && !mSocket.isClosed()) {
             try {
@@ -70,6 +81,9 @@ public class Client {
         mSocket = null;
     }
 
+	/*отправка пакета с заголовком на сервер.
+ 	входные значения: тип пакета, данные пакета, размер.
+  	возвращаемые значения: ничего или строка с ошибкой.*/
     void sendPacket(int type, byte[] body, int size) {
         if (mSocket == null || mSocket.isClosed()) {
             Log.d(LOG_TAG, "Ошибка отправки данных. Сокет не создан или закрыт");
@@ -98,6 +112,9 @@ public class Client {
         closeConnection();
     }
 
+	/*анализ полученного пакета по типам.
+ 	входные значения: тип пакета и его размер.
+  	возвращаемые значения: данные пакета.*/
     private boolean parsePacket(int type, int size) {
         byte[] body = new byte[size];
         System.arraycopy(inQ, 3, body, 0, size);
@@ -123,6 +140,9 @@ public class Client {
 
     /* ==================== PKT ans ==================== */
 
+	/*метод обработки ответа с сервера для теста.
+ 	входные значения: данные пакета.
+  	возвращаемые значения: true.*/
     public boolean PKTTestAns(byte[] body) {
         a = 0;
         String ansStr = readString(body, a);
@@ -130,6 +150,9 @@ public class Client {
     }
 
     // type size data
+	/*метод обработки ответа с сервера для регистрации.
+ 	входные значения: данные пакета.
+  	возвращаемые значения: true.*/
     public boolean PKTRegAns(byte[] body) {
         int ansType = body[0];
         a = 1;
@@ -150,6 +173,9 @@ public class Client {
         return true;
     }
 
+	/*метод обработки ответа с сервера для входа.
+ 	входные значения: данные пакета.
+  	возвращаемые значения: true.*/
     public boolean PKTLoginAns(byte[] body) {
         int ansType, offset;
         String ansStr;
@@ -182,6 +208,7 @@ public class Client {
         return true;
     }
 
+	/*метод обработки ответа с сервера для создания группы.*/
     public boolean PKTGroupCreateAns(byte[] body) {
         int ansType = body[0];
         a = 1;
@@ -199,6 +226,9 @@ public class Client {
         return true;
     }
 
+	/*метод обработки ответа с сервера для информации о группе.
+ 	входные значения: данные пакета.
+  	возвращаемые значения: true.*/
     public boolean PKTGroupInfoAns(byte[] body) {
         String grName, memberName;
         int mode, grId, memberId, size;
@@ -252,6 +282,9 @@ public class Client {
         return true;
     }
 
+	/*метод обработки ответа с сервера для присоединения к группе.
+ 	входные значения: данные пакета.
+  	возвращаемые значения: true.*/
     public boolean PKTGroupJoinAns(byte[] body) {
         int ansType = body[0];
         a = 1;
@@ -269,6 +302,9 @@ public class Client {
         return true;
     }
 
+	/*метод обработки ответа с сервера для координат пользователя.
+ 	входные значения: данные пакета.
+  	возвращаемые значения: true.*/
     public boolean PKTUserCordAns(byte[] body) {
         float longitude, latitude;
         int id, offset;
@@ -285,6 +321,9 @@ public class Client {
         return true;
     }
 
+	/*метод обработки ответа с сервера для добавления меток.
+ 	входные значения: данные пакета.
+  	возвращаемые значения: true.*/
     public boolean PKTMarkerAddAns(byte[] body) {
         float longitude, latitude;
         int markerId, type, color;
@@ -317,6 +356,9 @@ public class Client {
         return true;
     }
 
+	/*метод обработки ответа с сервера для изменения лидера группы.
+ 	входные значения: данные пакета.
+  	возвращаемые значения: true.*/
     public boolean PTKChangeLeadAns(byte[] body) {
         int ansType = body[0];
         a = 1;
@@ -337,6 +379,9 @@ public class Client {
         return true;
     }
 
+	/*метод обработки ответа с сервера для изменения прайм группы.
+ 	входные значения: данные пакета.
+  	возвращаемые значения: true.*/
     public boolean PKTChangePrimGroupAns(byte[] body) {
         String ansStr;
         int ansType = body[0];
@@ -357,6 +402,9 @@ public class Client {
         return true;
     }
 
+	/*метод обработки ответа с сервера для выхода из группы.
+ 	входные значения: данные пакета.
+  	возвращаемые значения: true.*/
     public boolean PKTExitGroupAns(byte[] body) {
         String ansStr;
         int ansType = body[0];
@@ -374,6 +422,9 @@ public class Client {
         return true;
     }
 
+	/*метод обработки ответа с сервера для удаления участника из группы.
+ 	входные значения: данные пакета.
+  	возвращаемые значения: true.*/
     public boolean PKTGroupKickAns(byte[] body) {
         String ansStr;
         int ansType = body[0];
@@ -392,6 +443,9 @@ public class Client {
         return true;
     }
 
+	/*метод обработки ответа с сервера для удаления метки.
+ 	входные значения: данные пакета.
+  	возвращаемые значения: true.*/
     public boolean PKTMarkerRemoveAns(byte[] body) {
         String ansStr;
         int ansType = body[0];
@@ -413,6 +467,9 @@ public class Client {
 
     /* ==================== PKT qwr ==================== */
 
+	/*метод отправки запроса на сервер для регистрации.
+ 	входные значения: логин, пароль, имя пользователя.
+  	возвращаемые значения: - .*/
     public void PKTReg(String login, String password, String name) {
         SData.login = login;
         SData.userName = name;
@@ -422,6 +479,9 @@ public class Client {
         sendPacket(PKT_USER_REG, body, body.length);
     }
 
+	/*метод отправки запроса на сервер для авторизации.
+ 	входные значения: логин, пароль, имя пользователя.
+  	возвращаемые значения: - .*/
     public void PKTLogin(String login, String password) {
         SData.login = login;
         SData.password = password;
@@ -430,6 +490,9 @@ public class Client {
         sendPacket(PKT_USER_LOGIN, body, body.length);
     }
 
+	/*метод отправки запроса на сервер для создания группы.
+ 	входные значения: название группы, пароль.
+  	возвращаемые значения: - .*/
     public void PKTGroupCreate(String name, String password) {
         byte[] body;
         if (password == null) body = name.getBytes(StandardCharsets.UTF_8);
@@ -437,6 +500,9 @@ public class Client {
         sendPacket(PKT_GROUP_CREATE, body, body.length);
     }
 
+	/*метод отправки запроса на сервер для присоединению к группе.
+ 	входные значения: название группы, пароль.
+  	возвращаемые значения: - .*/
     public void PKTGroupJoin(String name, String password) {
         byte[] body;
         if (password == null) body = name.getBytes(StandardCharsets.UTF_8);
@@ -444,6 +510,9 @@ public class Client {
         sendPacket(PKT_GROUP_JOIN, body, body.length);
     }
 
+	/*метод отправки на сервер координат пользователя.
+ 	входные значения: координаты.
+  	возвращаемые значения: - .*/
     public void PKTUserCord(Point position) {
         float longitude, latitude;
         byte[] body = new byte[8];
@@ -458,6 +527,9 @@ public class Client {
         sendPacket(PKT_USER_COORDS, body, body.length);
     }
 
+	/*метод отправки запроса на сервер для новой метки.
+ 	входные значения: тип метки, цвет, описание, координата.
+  	возвращаемые значения: - .*/
     public void PKTMarkerCreate(int type, int color, String description, Point point) {
         float longitude, latitude;
         byte[] descr = (description+"\0").getBytes(StandardCharsets.UTF_8);
@@ -481,6 +553,9 @@ public class Client {
         sendPacket(PKT_MARKER_CREATE, body, body.length);
     }
 
+	/*метод отправки запроса на сервер для смены лидераа.
+ 	входные значения: ID группы, имя нового лидера.
+  	возвращаемые значения: - .*/
     public void PTKChangeLead(int grId, int newLeadId) {
         byte[] body = new byte[8];
         int offset = 0;
@@ -491,18 +566,27 @@ public class Client {
         sendPacket(PKT_GROUP_CHANGE_LEAD, body, body.length);
     }
 
+	/*метод отправки запроса на сервер для изменения прайм группы.
+ 	входные значения: ID группы.
+  	возвращаемые значения: - .*/
     public void PKTChangePrimGroup(int grId) {
         byte[] body = new byte[4];
         intToBytes(grId, body, 0);
         sendPacket(PKT_USER_CHANGE_PRIMGR, body, body.length);
     }
 
+	/*метод отправки запроса на сервер для выхода из группы.
+ 	входные значения: ID группы.
+  	возвращаемые значения: - .*/
     public void PKTExitGroup(int grId) {
         byte[] body = new byte[4];
         intToBytes(grId, body, 0);
         sendPacket(PKT_GROUP_EXIT, body, body.length);
     }
 
+	/*метод отправки запроса на сервер для удаления участника группы.
+ 	входные значения: ID группы, имя пользователя.
+  	возвращаемые значения: - .*/
     public void PKTGroupKick(int grId, int memberId) {
         byte[] body = new byte[8];
         int offset = 0;
@@ -511,6 +595,9 @@ public class Client {
         sendPacket(PKT_GROUP_KICK, body, body.length);
     }
 
+	/*метод отправки запроса на сервер для удаления метки.
+ 	входные значения: ID группы, ID метки.
+  	возвращаемые значения: - .*/
     public void PKTMarkerRemove(int grId, int markerId) {
         byte[] body = new byte[8];
         int offset = 0;
@@ -521,16 +608,25 @@ public class Client {
 
     /* ==================== extra func ==================== */
 
+	/*вспомогательный метод для работы с байтами. конвертирует long в массив байт.
+ 	входные значения: число для конвертации, длинна числа, массив байт, начальный индекс.
+  	возвращаемые значения: новый индекс.*/
     private int longToBytes(long lnum, int n, byte[] bytes, int startIndex) {
         for (int i = 0; i < 8; i++) bytes[startIndex + i] = (byte) ((lnum >> (i * 8)) & 0xFF);
         return startIndex + 8;
     }
 
+	/*вспомогательный метод для работы с байтами. конвертирует int в массив байт.
+ 	входные значения: число для конвертации, массив байт, начальный индекс.
+  	возвращаемые значения: новый индекс.*/
     private int intToBytes(int num, byte[] bytes, int startIndex) {
         for (int i = 0; i < 4; i++) bytes[startIndex + i] = (byte) ((num >> (i * 8)) & 0xFF);
         return startIndex + 4;
     }
 
+	/*вспомогательный метод для работы с байтами. конвертирует массив байт в double.
+ 	входные значения: исходный массив байт, смещение.
+  	возвращаемые значения: преобразованное число.*/
     private double bytesToDouble(byte[] bytes, int offset) {
         long l = ((bytes[offset+0] & 0xFFL) <<  0) |
                  ((bytes[offset+1] & 0xFFL) <<  8) |
@@ -544,6 +640,9 @@ public class Client {
         return Double.longBitsToDouble(l);
     }
 
+	/*вспомогательный метод для работы с байтами. конвертирует массив байт во float.
+ 	входные значения: исходный массив байт, смещение.
+  	возвращаемые значения: полученное значение.*/
     private float bytesToFloat(byte[] bytes, int offset) {
         int i = ((bytes[offset+0] & 0xFF) <<  0) |
                 ((bytes[offset+1] & 0xFF) <<  8) |
@@ -553,10 +652,16 @@ public class Client {
         return Float.intBitsToFloat(i);
     }
 
+	/*вспомогательный метод для работы с байтами. массив байт в int.
+ 	входные значения: исходный массив байт, смещение.
+  	возвращаемые значения: преобразованное число.*/
     private int bytesToInt(byte[] bytes, int offset) {
         return (bytes[offset]&0xFF) + ((bytes[offset+1]&0xFF)<<8) + ((bytes[offset+2]&0xFF)<<16) + ((bytes[offset+3]&0xFF)<<32);
     }
 
+	/*вспомогательный метод для чтения из байтового массива.
+ 	входные значения: массив байт, начальная позиция.
+  	возвращаемые значения: прочитанная строка или ноль.*/
     public String readString(byte[] body, int pos) {
         int i = pos;
         String str;
@@ -574,23 +679,26 @@ public class Client {
         return str;
     }
 
+	/*вспомогательный метод для проверки статуса регистрации. возвращает true если пользователь авторизирован.*/
     public boolean isRegistered() {
         return isRegistered;
     }
 
     /* ==================== Threads ==================== */
 
+	/*класс для отправки данных на сервер.*/
     class WriteServerThread implements Runnable {
         public WriteServerThread() {}
 
         @Override
         public void run() {
             byte[] el;
-
+		/*автоматическая авторизация если есть сохраненные данные в БД.*/
             DatabaseHelper databaseHelper = new DatabaseHelper(MyApplication.getContext());
             Log.d(LOG_TAG, "run: "+databaseHelper.getLogin()+" "+databaseHelper.getPassword());
             if (databaseHelper.getLogin() != null && databaseHelper.getPassword() != null) PKTLogin(databaseHelper.getLogin(), databaseHelper.getPassword());
 
+		/*сама отправка данных.*/
             while (true) {
                 try {
                     SEMAPHORE.acquire();
@@ -610,13 +718,15 @@ public class Client {
         }
     }
 
+	/*класс для чтения данных с сервера.*/
     class ReadServerThread implements Runnable {
         public ReadServerThread() {}
 
         @Override
         public void run() {
             int r, type, size;
-
+		
+		/*подключение к серверу.*/
             do {
                 try {
                     mSocket = new Socket(mHost, mPort);
@@ -631,6 +741,7 @@ public class Client {
                 }
             } while (!mSocket.isConnected());
 
+		/*сам цикл чтения.*/
             while (true) {
                 try {
                     r = mSocket.getInputStream().read(inQ, inDataSize, inQ.length-inDataSize);
