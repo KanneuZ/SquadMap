@@ -14,6 +14,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.yandex.mapkit.geometry.Point;
 
+/*класс главной активности приложения.*/
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private final String MAPKIT_API_KEY = "791f3cbd-ad64-40f4-bb25-147e090b2751";
@@ -25,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
 
     private int curId = R.id.profile;
 
+	/*создание активности.
+	входные значения: сохраненное состояние.
+  	возвращаемые значения: - .*/ 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -71,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         tv.setText(SData.userName);
     }
 
+	/*наблюдение за группой.*/
     private final Observer<String> obsGroup = s -> {
 		Log.d("TAG", "onChanged: " + s);
 		NavigationView navigationView = findViewById(R.id.nav_view);
@@ -79,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
 		tv.setText(s);
 	};
 
+	/*наблюдение за координатами пользователя.*/
     private final Observer<Point> obsCoords = p -> {
         Log.d("TAG", "onChanged: " + p);
         NavigationView navigationView = findViewById(R.id.nav_view);
