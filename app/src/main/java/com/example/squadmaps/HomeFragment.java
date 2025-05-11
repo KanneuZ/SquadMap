@@ -11,10 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 
+/*класс фрагмента главного экрана.*/
 public class HomeFragment extends Fragment  {
     private MapHelper mapHelper;
 
     View.OnClickListener radioButtonClickListener = new View.OnClickListener() {
+	/*обработка для выбора метки.
+ 	входные значения: нажатая метка???.
+  	возвращаемые значения: - .*/  
         @Override
         public void onClick(View v) {
             RadioButton rb = (RadioButton)v;
@@ -37,16 +41,21 @@ public class HomeFragment extends Fragment  {
         }
     };
 
+	/*констурктор.*/
     public HomeFragment(MapHelper mapHlp) {
         mapHelper = mapHlp;
     }
 
     @Override
+	/*создание фрагмента.
+ 	входные значения: сохраненное состояние.
+  	возвращаемые значения: - .*/ 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
 	@Override
+	/*опять эти вью дурацкие пиши сам или удали для меня это окошко.*/ 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
@@ -74,12 +83,14 @@ public class HomeFragment extends Fragment  {
     }
 
     @Override
+	/*остановка фрагмента*/
     public void onStop() {
         mapHelper.onStop();
         super.onStop();
     }
 
     @Override
+	/*старт фрагмента*/
     public void onStart() {
         super.onStart();
         mapHelper.onStart();
