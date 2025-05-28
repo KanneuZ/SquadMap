@@ -23,7 +23,7 @@ public class MyApplication extends android.app.Application {
     }
 
     @Override
-    /*создание приложения??.
+    /*создание приложения.
 	входные значения: - .
   	возвращаемые значения: - .*/
     public void onCreate() {
@@ -41,7 +41,7 @@ public class MyApplication extends android.app.Application {
     }
 
     @Override
-	/*завершение работы приложения???.
+	/*завершение работы приложения.
 	входные значения: - .
   	возвращаемые значения: -.*/
     public void onTerminate() {
