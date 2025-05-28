@@ -17,7 +17,7 @@ public class HomeFragment extends Fragment  {
 
     View.OnClickListener radioButtonClickListener = new View.OnClickListener() {
 	/*обработка для выбора метки.
- 	входные значения: нажатая метка???.
+ 	входные значения: нажатая метка.
   	возвращаемые значения: - .*/  
         @Override
         public void onClick(View v) {
