@@ -55,7 +55,6 @@ public class HomeFragment extends Fragment  {
     }
 
 	@Override
-	/*опять эти вью дурацкие пиши сам или удали для меня это окошко.*/ 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
