@@ -88,7 +88,7 @@ public class GroupInfo {
 
 	/*установка прайм группы.
  	входные значения: true чтобы сделать группу основной.
-  	возвращаемые значения: - .
+  	возвращаемые значения: - .*/
 	public void setPrim(Boolean prim) {
 		isPrim = prim;
 	}
