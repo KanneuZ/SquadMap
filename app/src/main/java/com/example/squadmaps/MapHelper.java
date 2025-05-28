@@ -91,7 +91,7 @@ public class MapHelper implements UserLocationObjectListener {
   	возвращаемые значения: - .*/ 
         public void onLocationStatusUpdated(@NonNull LocationStatus locationStatus) {}
     };
-	/*слушатель нажатия на метку????.
+	/*слушатель нажатия на метку.
 	входные значения: обьект на карте, координаты нажатия.
   	возвращаемые значения: true/false.*/ 
     private final MapObjectTapListener delLst = new MapObjectTapListener() {
@@ -120,8 +120,8 @@ public class MapHelper implements UserLocationObjectListener {
         return false;
     }
 
-	/*нажатие на карту????.
-	входные значения: ???карта??точка нажатия???.
+	/*нажатие на карту.
+	входные значения: карта/точка нажатия.
   	возвращаемые значения: - .*/ 
     private final InputListener tl = new InputListener() {
         @Override
@@ -196,7 +196,7 @@ public class MapHelper implements UserLocationObjectListener {
     };
 
 	/*наблюдатель за удалением меток.
-	входные значения: число???.
+	входные значения: число.
   	возвращаемые значения: - .*/ 
     Observer<Integer> markRem = new Observer<Integer>() {
         @Override
@@ -227,7 +227,6 @@ public class MapHelper implements UserLocationObjectListener {
         isInitAPI = true;
     }
 
-	/*??????????????????опять окошки*/
     public void init(View view, int id, LifecycleOwner onw) {
         initMap(view, id);
         initCols();
@@ -309,7 +308,7 @@ public class MapHelper implements UserLocationObjectListener {
         return moveMark;
     }
 
-	/*установка точки??*/
+	/*установка точки*/
     private PlacemarkMapObject placePoint(MapObjectCollection col, MarkersInfo markersInfo) {
         if (markersInfo == null) return null;
         if (markersInfo.getType() == SData.MOVE_MARKER) return placeMoveMark(markersInfo);
