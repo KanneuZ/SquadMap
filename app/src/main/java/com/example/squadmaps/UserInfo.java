@@ -154,7 +154,6 @@ public class UserInfo {
 		isLead = lead;
 	}
 
-	/*какойто делл*/
 	public boolean isToDell() {
 		return isToDell;
 	}
