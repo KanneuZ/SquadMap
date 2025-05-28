@@ -33,8 +33,6 @@ public class ShareFragment extends Fragment {
     }
 
     @Override
-    /*вью верчу я на хую. спать хочется :х*/
-    /*НЕ ЗАБУДЬ УДАЛИТЬ ЭТО ВСЕ ТОЛЬКО САВЕЛЬЕВ НЕ ОДОБРИТ*/
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_share, container, false);
     }
